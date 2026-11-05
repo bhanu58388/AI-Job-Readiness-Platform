@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment Results | SkillReady AI</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(120deg, #eef2ff, #f5f3ff);
+            color: #1e293b;
+        }
+
+        nav {
+            background: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+
+        .nav-link {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 750px;
+            margin: 45px auto;
+        }
+
+        .result-card {
+            background: white;
+            padding: 40px;
+            border-radius: 18px;
+            text-align: center;
+            box-shadow: 0 12px 40px rgba(79, 70, 229, 0.10);
+        }
+
+        .result-icon {
+            font-size: 55px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: #172554;
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .score-circle {
+            width: 175px;
+            height: 175px;
+            border-radius: 50%;
+            border: 10px solid #c7d2fe;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 30px;
+            background: #eef2ff;
+        }
+
+        .score {
+            font-size: 42px;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+
+        .score-label {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 28px;
+        }
+
+        .detail-box {
+            background: #f8fafc;
+            padding: 20px 10px;
+            border-radius: 10px;
+        }
+
+        .detail-box h3 {
+            font-size: 23px;
+            color: #4f46e5;
+            margin-bottom: 8px;
+        }
+
+        .detail-box p {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .readiness {
+            background: #eef2ff;
+            padding: 22px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .readiness h2 {
+            color: #3730a3;
+            font-size: 21px;
+            margin-bottom: 10px;
+        }
+
+        .readiness p {
+            color: #475569;
+            line-height: 1.6;
+        }
+
+        .skill-name {
+            color: #64748b;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 13px 22px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .primary-btn {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .primary-btn:hover {
+            background: #3730a3;
+        }
+
+        .secondary-btn {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            .result-card {
+                padding: 25px 18px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">SkillReady AI</div>
+        <a href="/dashboard" class="nav-link">← Dashboard</a>
+    </nav>
+
+    <div class="container">
+
+        <div class="result-card">
+
+            <div class="result-icon">🏆</div>
+
+            <h1>Assessment Completed!</h1>
+
+            <p class="subtitle">
+                Great effort, {{ student_name }}!
+                Here is your skill assessment report.
+            </p>
+
+            <p class="skill-name">
+                Skill Category: <strong>{{ skill_name }}</strong>
+            </p>
+
+            <div class="score-circle">
+                <div class="score">{{ score }}%</div>
+                <div class="score-label">Your Score</div>
+            </div>
+
+            <div class="details">
+
+                <div class="detail-box">
+                    <h3>{{ correct_answers }}</h3>
+                    <p>Correct Answers</p>
+                </div>
+
+                <div class="detail-box">
+                    <h3>{{ total_questions }}</h3>
+                    <p>Total Questions</p>
+                </div>
+
+                <div class="detail-box">
+                    <h3>{{ total_questions - correct_answers }}</h3>
+                    <p>Incorrect Answers</p>
+                </div>
+
+            </div>
+
+            <div class="readiness">
+                <h2>{{ readiness_level }}</h2>
+                <p>
+                    Your current job-readiness level based on
+                    your assessment performance.
+                </p>
+            </div>
+
+            <div class="buttons">
+
+                <a href="/assessment" class="btn primary-btn">
+                    Try Another Assessment
+                </a>
+
+                <a href="{{ url_for('download_report') }}"
+                   class="btn primary-btn">
+                    📄 Download PDF Report
+                </a>
+
+                <a href="/dashboard" class="btn secondary-btn">
+                    Back to Dashboard
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer>
+        © 2026 SkillReady AI | Student Skill Assessment Platform
+    </footer>
+
+</body>
+</html>

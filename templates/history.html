@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Results - SkillReady AI</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: #243b80;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #243b80;
+            text-align: center;
+        }
+
+        .result-card {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .result-card p {
+            font-size: 16px;
+            margin: 12px 0;
+            color: #333;
+        }
+
+        .empty-message {
+            background: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .links a {
+            display: inline-block;
+            background: #243b80;
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            margin: 8px;
+            border-radius: 6px;
+        }
+
+        .links a:hover {
+            background: #162957;
+        }
+
+        .links .download-btn {
+            background: #16a34a;
+        }
+
+        .links .download-btn:hover {
+            background: #15803d;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>SkillReady AI</h1>
+    <p>My Assessment Results</p>
+</header>
+
+<div class="container">
+
+    <h2>Assessment History</h2>
+
+    {% if assessments %}
+
+        {% for assessment in assessments %}
+
+        <div class="result-card">
+
+            <p><strong>Skill Category:</strong>
+                {{ assessment.skill_name }}
+            </p>
+
+            <p><strong>Score:</strong>
+                {{ assessment.score }}%
+            </p>
+
+            <p><strong>Correct Answers:</strong>
+                {{ assessment.correct_answers }} /
+                {{ assessment.total_questions }}
+            </p>
+
+            <p><strong>Job Readiness Level:</strong>
+                {{ assessment.readiness_level }}
+            </p>
+
+            <p><strong>Assessment Date:</strong>
+                {{ assessment.created_at.strftime('%d-%m-%Y %I:%M %p') }}
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="empty-message">
+            <h3>No Previous Assessments Found</h3>
+            <p>You have not completed any skill assessments yet.</p>
+            <p>Start your first assessment to see your results here!</p>
+        </div>
+
+    {% endif %}
+
+    <div class="links">
+
+        <a href="{{ url_for('download_report') }}"
+           class="download-btn">
+            📄 Download PDF Report
+        </a>
+
+        <a href="{{ url_for('dashboard') }}">
+            Back to Dashboard
+        </a>
+
+        <a href="{{ url_for('assessment') }}">
+            Start New Assessment
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

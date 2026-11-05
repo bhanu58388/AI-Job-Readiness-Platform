@@ -1,0 +1,292 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Assessment | SkillReady AI</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f7ff;
+            color: #1e293b;
+        }
+
+        nav {
+            background: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+
+        .back-link {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 850px;
+            margin: 40px auto;
+        }
+
+        .heading {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .heading h1 {
+            color: #172554;
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .heading p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .assessment-info {
+            background: #eef2ff;
+            border: 1px solid #c7d2fe;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            color: #3730a3;
+            line-height: 1.8;
+        }
+
+        .question-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.06);
+        }
+
+        .question-card h3 {
+            color: #172554;
+            font-size: 17px;
+            line-height: 1.5;
+            margin-bottom: 18px;
+        }
+
+        .category-select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+            background: white;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            color: #475569;
+        }
+
+        .option:hover {
+            background: #eef2ff;
+            border-color: #818cf8;
+        }
+
+        .option input {
+            accent-color: #4f46e5;
+            width: 17px;
+            height: 17px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background: #3730a3;
+        }
+
+        .message {
+            padding: 12px;
+            margin-bottom: 18px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            .heading h1 {
+                font-size: 24px;
+            }
+
+            .question-card {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">SkillReady AI</div>
+        <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+    </nav>
+
+    <div class="container">
+
+        <div class="heading">
+            <h1>Skill Assessment</h1>
+            <p>Test your knowledge and discover your skill level.</p>
+        </div>
+
+        <div class="assessment-info">
+            <strong>Instructions:</strong>
+            <ul>
+                <li>Select your preferred skill category.</li>
+                <li>Answer all five multiple-choice questions.</li>
+                <li>Select one answer for every question.</li>
+                <li>Submit your answers to calculate your score.</li>
+            </ul>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="message {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+
+        <div class="question-card">
+            <h3>Select Your Skill Category</h3>
+
+            <select
+                class="category-select"
+                onchange="changeCategory(this.value)"
+            >
+                <option value="Python"
+                    {% if skill_name == "Python" %}selected{% endif %}>
+                    Python Programming
+                </option>
+
+                <option value="Web Development"
+                    {% if skill_name == "Web Development" %}selected{% endif %}>
+                    Web Development
+                </option>
+
+                <option value="SQL"
+                    {% if skill_name == "SQL" %}selected{% endif %}>
+                    Database and SQL
+                </option>
+
+                <option value="Communication"
+                    {% if skill_name == "Communication" %}selected{% endif %}>
+                    Communication Skills
+                </option>
+            </select>
+        </div>
+
+        <form action="/assessment" method="POST">
+
+            <input
+                type="hidden"
+                name="skill_name"
+                value="{{ skill_name }}"
+            >
+
+            {% for question in questions %}
+
+                <div class="question-card">
+
+                    <h3>
+                        {{ loop.index }}. {{ question.question }}
+                    </h3>
+
+                    {% for option in question.options %}
+
+                        <label class="option">
+                            <input
+                                type="radio"
+                                name="question_{{ question.id }}"
+                                value="{{ option.value }}"
+                                required
+                            >
+                            <span>{{ option.text }}</span>
+                        </label>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endfor %}
+
+            <button type="submit" class="submit-btn">
+                Submit Assessment
+            </button>
+
+        </form>
+
+    </div>
+
+    <footer>
+        © 2026 SkillReady AI | Student Skill Assessment Platform
+    </footer>
+
+    <script>
+        function changeCategory(category) {
+            window.location.href =
+                "/assessment?skill=" + encodeURIComponent(category);
+        }
+    </script>
+
+</body>
+</html>
+```
